@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Election Assistant</title>
+</head>
+<body>
+  <h2>Election Help Assistant 🇮🇳</h2>
+  <input type="text" id="userInput" placeholder="Ask about voting...">
+  <button onclick="reply()">Ask</button>
+  <p id="response"></p>
+
+  <script>
+    function reply() {
+      let input = document.getElementById("userInput").value.toLowerCase();
+      let response = "";
+
+      if (input.includes("vote")) {
+        response = "To vote: Register → Check voter ID → Visit booth → Cast vote.";
+      } else if (input.includes("timeline")) {
+        response = "Election timeline: Announcement → Campaign → Voting → Counting → Result.";
+      } else {
+        response = "Ask about voting process or timeline.";
+      }
+
+      document.getElementById("response").innerText = response;
+    }
+  </script>
+</body>
+</html>
