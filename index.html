@@ -1,29 +1,644 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Election Assistant</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DemocracyOS | NextGen Election Intelligence</title>
+    //fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    //cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0f;
+            --glass-1: rgba(20, 20, 35, 0.7);
+            --glass-2: rgba(255, 255, 255, 0.05);
+            --neon-blue: #00d4ff;
+            --neon-purple: #7c3aed;
+            --neon-pink: #ff00ff;
+            --gold: #ffd700;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+            --text-faint: #606060;
+            --gradient-main: linear-gradient(135deg, #00d4ff 0%, #7c3aed 50%, #ff00ff 100%);
+            --gradient-gold: linear-gradient(135deg, #ffd700 0%, #ffed4a 50%, #ffd700 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            color: var(--text-main);
+        }
+
+        /* CYBERPUNK MATRIX BACKGROUND */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: 
+                radial-gradient(circle at 20% 10%, rgba(0, 212, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 0, 255, 0.2) 0%, transparent 50%);
+            animation: matrixPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes matrixPulse {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        /* SCANLINES */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
+            background-size: 100% 4px, 4px 100%;
+            pointer-events: none;
+            z-index: 2;
+            animation: scan 20s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { background-position: 0 0, 0 0; }
+            100% { background-position: 0 100%, 100% 0; }
+        }
+
+        /* FLOATING HOLOGRAPHIC ELEMENTS */
+        .holo-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .holo-item {
+            position: absolute;
+            background: linear-gradient(45deg, transparent, var(--neon-blue), transparent);
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: holoFloat 15s ease-in-out infinite;
+        }
+
+        @keyframes holoFloat {
+            0%, 100% { transform: translateY(0px) scale(1); opacity: 0.3; }
+            33% { transform: translateY(-30px) scale(1.2); opacity: 0.6; }
+            66% { transform: translateY(-15px) scale(0.9); opacity: 0.4; }
+        }
+
+        .main-container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* MAIN TERMINAL */
+        .cyber-terminal {
+            width: 100%;
+            max-width: 720px;
+            height: 92vh;
+            background: var(--glass-1);
+            backdrop-filter: blur(60px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 
+                0 0 100px rgba(0, 212, 255, 0.3),
+                0 0 200px rgba(124, 58, 237, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-terminal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-main);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 30px rgba(0, 212, 255, 0.8); }
+            50% { box-shadow: 0 0 50px rgba(0, 212, 255, 1); }
+        }
+
+        /* HEADER BAR */
+        .header-bar {
+            padding: 24px 32px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(30px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .holo-logo {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-main);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.6);
+            position: relative;
+        }
+
+        .holo-logo::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            background: var(--gradient-main);
+            filter: blur(8px);
+            opacity: 0.4;
+            animation: logoPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.05); opacity: 0.7; }
+        }
+
+        .brand-text {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .status-panel {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--gold);
+            border-radius: 50%;
+            animation: cyberPulse 1.5s infinite;
+        }
+
+        @keyframes cyberPulse {
+            0%, 100% { box-shadow: 0 0 5px var(--gold); }
+            50% { box-shadow: 0 0 20px var(--gold); }
+        }
+
+        /* CONTENT AREA */
+        .content-area {
+            flex: 1;
+            padding: 36px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .content-area::-webkit-scrollbar { display: none; }
+
+        /* MESSAGE BUBBLES */
+        .msg-bubble {
+            max-width: 92%;
+            padding: 24px 28px;
+            border-radius: 20px;
+            backdrop-filter: blur(30px);
+            position: relative;
+            animation: cyberSlide 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        @keyframes cyberSlide {
+            0% { 
+                opacity: 0; 
+                transform: translateX(-30px) scale(0.9) rotateX(90deg);
+                filter: blur(10px);
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateX(0) scale(1) rotateX(0deg);
+                filter: blur(0px);
+            }
+        }
+
+        .ai-bubble {
+            background: var(--glass-2);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            align-self: flex-start;
+            border-left: 5px solid transparent;
+            background-image: linear-gradient(var(--glass-2), var(--glass-2)), var(--gradient-main);
+            background-clip: padding-box, border-box;
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.2);
+        }
+
+        .user-bubble {
+            background: var(--gradient-main);
+            align-self: flex-end;
+            color: #000;
+            font-weight: 600;
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-bubble::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: var(--gradient-gold);
+            z-index: -1;
+            border-radius: 20px;
+            filter: blur(8px);
+            animation: borderGlow 3s linear infinite;
+        }
+
+        @keyframes borderGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .msg-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* CONTROL PANEL */
+        .control-panel {
+            padding: 32px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(40px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            bottom: 0;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .cyber-btn {
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(0, 212, 255, 0.4);
+            border-radius: 16px;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-btn:hover {
+            background: var(--gradient-main);
+            border-color: transparent;
+            color: #000;
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 212, 255, 0.6);
+        }
+
+        .cyber-btn i {
+            margin-right: 8px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        /* INPUT */
+        .input-zone {
+            display: flex;
+            gap: 16px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 12px;
+            border-radius: 20px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            backdrop-filter: blur(40px);
+            transition: all 0.3s ease;
+        }
+
+        .input-zone:focus-within {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+        }
+
+        input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-main);
+            padding: 16px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+        }
+
+        input::placeholder {
+            color: var(--text-faint);
+        }
+
+        .execute-btn {
+            background: var(--gradient-main);
+            border: none;
+            padding: 16px 28px;
+            border-radius: 16px;
+            color: #000;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .execute-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.7);
+        }
+
+        .status-line {
+            font-size: 12px;
+            color: var(--neon-blue);
+            margin-top: 16px;
+            display: none;
+            font-family: 'JetBrains Mono', monospace;
+            animation: statusPulse 1.5s infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @media (max-width: 768px) {
+            .cyber-terminal { height: 96vh; border-radius: 20px; }
+            .quick-grid { grid-template-columns: repeat(2, 1fr); }
+            .content-area { padding: 24px; }
+        }
+    </style>
 </head>
 <body>
-  <h2>Election Help Assistant 🇮🇳</h2>
-  <input type="text" id="userInput" placeholder="Ask about voting...">
-  <button onclick="reply()">Ask</button>
-  <p id="response"></p>
+    <div class="matrix-bg"></div>
+    <div class="scanlines"></div>
+    <div class="holo-elements" id="holo"></div>
 
-  <script>
-    function reply() {
-      let input = document.getElementById("userInput").value.toLowerCase();
-      let response = "";
+    <div class="main-container">
+        <div class="cyber-terminal">
+            <div class="header-bar">
+                <div class="brand-section">
+                    <div class="holo-logo">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="brand-text">DEMOCRACYOS</div>
+                    <div style="font-size: 11px; color: var(--text-dim); font-family: 'JetBrains Mono'; margin-left: 8px;">v5.0 CYBER</div>
+                </div>
+                <div class="status-panel">
+                    <div class="status-dot"></div>
+                    <span style="font-size: 12px;">LIVE | QUANTUM SYNC</span>
+                </div>
+            </div>
 
-      if (input.includes("vote")) {
-        response = "To vote: Register → Check voter ID → Visit booth → Cast vote.";
-      } else if (input.includes("timeline")) {
-        response = "Election timeline: Announcement → Campaign → Voting → Counting → Result.";
-      } else {
-        response = "Ask about voting process or timeline.";
-      }
+            <div class="content-area" id="chatLog">
+                <div class="msg-bubble ai-bubble" style="animation-delay: 0.2s;">
+                    <div class="msg-header">
+                        <i class="fas fa-brain" style="color: var(--neon-blue); font-size: 16px;"></i>
+                        <span>QUANTUM CORE ONLINE</span>
+                    </div>
+                    <div style="font-size: 16px; font-weight: 500;">
+                        🚀 DemocracyOS Cyber Intelligence v5.0 activated
+                    </div>
+                    <div style="margin-top: 16px; font-size: 14px; color: var(--text-dim); line-height: 1.6;">
+                        Query election protocols, voter analytics, or constituency matrices.<br>
+                        <strong>Quantum-secured | ECI compliant | Real-time blockchain sync</strong>
+                    </div>
+                </div>
+            </div>
 
-      document.getElementById("response").innerText = response;
-    }
-  </script>
+            <div class="status-line" id="status">
+                <i class="fas fa-circle-notch fa-spin"></i> Neural processing election matrix...
+            </div>
+
+            <div class="control-panel">
+                <div class="quick-grid">
+                    <div class="cyber-btn" onclick="quickCmd('VOTER REGISTRATION MATRIX')">
+                        <i class="fas fa-user-plus"></i> REGISTER
+                    </div>
+                    <div class="cyber-btn" onclick="quickCmd('ELECTION PHASE PROTOCOL')">
+                        <i class="fas fa-calendar"></i> TIMELINE
+                    </div>
+                    <div class="cyber-btn" onclick="quickCmd('ELIGIBILITY SCAN')">
+                        <i class="fas fa-scanner"></i> ELIGIBILITY
+                    </div>
+                    <div class="cyber-btn" onclick="quickCmd('IDENTITY PROTOCOL')">
+                        <i class="fas fa-fingerprint"></i> ID SCAN
+                    </div>
+                </div>
+
+                <div class="input-zone">
+                    <input type="text" id="cmdInput" placeholder=">> EXECUTE CYBER COMMAND" onkeypress="if(event.key==='Enter') runCommand()">
+                    <button class="execute-btn" onclick="runCommand()">
+                        <i class="fas fa-bolt"></i> LAUNCH
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // HOLO ELEMENTS
+        function createHoloElements() {
+            const container = document.getElementById('holo');
+            for(let i = 0; i < 15; i++) {
+                const elem = document.createElement('div');
+                elem.className = 'holo-item';
+                elem.style.left = Math.random() * 100 + '%';
+                elem.style.top = Math.random() * 100 + '%';
+                elem.style.width = elem.style.height = (Math.random() * 6 + 3) + 'px';
+                elem.style.animationDelay = Math.random() * 15 + 's';
+                elem.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(elem);
+            }
+        }
+
+        // DATA RESPONSES
+        const CYBER_DATA = {
+            reg: `
+                <div class="msg-header">
+                    <i class="fas fa-user-plus" style="color: var(--gold);"></i>
+                    <span>VOTER ENROLLMENT MATRIX</span>
+                </div>
+                <div style="font-size: 16px; margin-bottom: 16px;">
+                    <span style="color: var(--gold);">PROTOCOL 6-REG</span> ACTIVATED
+                </div>
+                <div style="display: grid; gap: 12px; font-size: 14px;">
+                    <div><i class="fas fa-globe" style="color: var(--neon-blue); margin-right: 8px;"></i>NVSP Portal: nvsp.in</div>
+                    <div><i class="fas fa-file-alt" style="color: var(--neon-purple); margin-right: 8px;"></i>Form-6 + Documents</div>
+                    <div><i class="fas fa-clock" style="color: var(--neon-pink); margin-right: 8px;"></i>Verification: 7-14 days</div>
+                    <div><i class="fas fa-shield-alt" style="color: var(--gold); margin-right: 8px;"></i>Status: EPIC Track</div>
+                </div>
+                <div style="margin-top: 20px; padding: 16px; background: rgba(255, 215, 0, 0.1); border-radius: 12px; font-size: 13px;">
+                    🔄 Next enrollment cycle: Q2 2029
+                </div>
+            `,
+            
+            time: `
+                <div class="msg-header">
+                    <i class="fas fa-calendar" style="color: var(--gold);"></i>
+                    <span>ELECTION TEMPORAL MATRIX</span>
+                </div>
+                <div style="font-size: 16px; margin-bottom: 16px;">
+                    2024 GENERAL ELECTIONS: <span style="color: var(--gold);">COMPLETE</span>
+                </div>
+                <div style="display: grid; gap: 12px; font-size: 14px;">
+                    <div><i class="fas fa-check-circle" style="color: var(--neon-blue); margin-right: 8px;"></i>LS 2024: Concluded</div>
+                    <div><i class="fas fa-clock" style="color: var(--neon-purple); margin-right: 8px;"></i>Next LS: 2029</div>
+                    <div><i class="fas fa-sync-alt" style="color: var(--neon-pink); margin-right: 8px;"></i>State Assembly: Variable</div>
+                </div>
+            `,
+            
+            elig: `
+                <div class="msg-header">
+                    <i class="fas fa-scanner" style="color: var(--gold);"></i>
+                    <span>ELIGIBILITY QUANTUM SCAN</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-bottom: 20px; font-size: 14px;">
+                    <div style="color: var(--neon-blue);">✓ REQUIRED</div>
+                    <div>Age ≥ 18 (1st Jan qualifying year)</div>
+                    <div style="color: var(--neon-blue);">✓ REQUIRED</div>
+                    <div>Indian Citizenship verified</div>
+                    <div style="color: var(--neon-pink);">✗ BLOCKED</div>
+                    <div>Criminal record / Govt servant</div>
+                </div>
+            `,
+            
+            docs: `
+                <div class="msg-header">
+                    <i class="fas fa-fingerprint" style="color: var(--gold);"></i>
+                    <span>IDENTITY AUTHENTICATION</span>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 12px; font-size: 14px; margin-bottom: 16px;">
+                    <div style="padding: 12px 16px; background: rgba(0, 212, 255, 0.1); border-radius: 8px; border-left: 3px solid var(--neon-blue);">
+                        <i class="fas fa-id-card" style="margin-right: 6px;"></i>EPIC
+                    </div>
+                    <div style="padding: 12px 16px; background: rgba(124, 58, 237, 0.1); border-radius: 8px; border-left: 3px solid var(--neon-purple);">
+                        <i class="fas fa-fingerprint" style="margin-right: 6px;"></i>Aadhaar
+                    </div>
+                    <div style="padding: 12px 16px; background: rgba(255, 0, 255, 0.1); border-radius: 8px; border-left: 3px solid var(--neon-pink);">
+                        <i class="fas fa-passport" style="margin-right: 6px;"></i>Passport
+                    </div>
+                </div>
+                <div style="font-size: 13px; color: var(--text-dim);">⚠️ Originals only at polling stations</div>
+            `
+        };
+
+        const chatLog = document.getElementById('chatLog');
+        const cmdInput = document.getElementById('cmdInput');
+        const status = document.getElementById('status');
+
+        function addMessage(content, isUser = false) {
+            const bubble = document.createElement('div');
+            bubble.className = `msg-bubble ${isUser ? 'user-bubble' : 'ai-bubble'}`;
+            bubble.innerHTML = content;
+            chatLog.appendChild(bubble);
+            chatLog.scrollTo({ top: chatLog.scrollHeight, behavior: 'smooth' });
+        }
+
+        function runCommand() {
+            const cmd = cmdInput.value.trim();
+            if (!cmd) return;
+
+            addMessage(cmd, true);
+            cmdInput.value = '';
+            
+            status.style.display = 'block';
+            status.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Quantum decrypting election protocols...';
+
+            setTimeout(() => {
+                status.style.display = 'none';
+                const query = cmd.toLowerCase();
+                let response = '<div style="color: var(--neon-pink); font-weight: 600;">⚠️ UNKNOWN CYBER COMMAND</div><div style="font-size: 13px; color: var(--text-dim);">Try: REGISTRATION, TIMELINE, ELIGIBILITY, DOCS</div>';
+
+                if (query.includes('reg') || query.includes('register')) response = CYBER_DATA.reg;
+                else if (query.includes('time') || query.includes('timeline')) response = CYBER_DATA.time;
+                else if (query.includes('elig') || query.includes('eligibility')) response = CYBER_DATA.elig;
+                else if (query.includes('doc') || query.includes('id')) response = CYBER_DATA.docs;
+
+                addMessage(response);
+            }, 1500 + Math.random() * 1000);
+        }
+
+        function quickCmd(text) {
+            cmdInput.value = text;
+            cmdInput.focus();
+            setTimeout(runCommand, 200);
+        }
+
+        // INIT
+        createHoloElements();
+        cmdInput.focus();
+    </script>
 </body>
 </html>
